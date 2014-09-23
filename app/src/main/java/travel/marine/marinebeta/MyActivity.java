@@ -1,31 +1,41 @@
 package travel.marine.marinebeta;
 
-import android.app.Activity;
-
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.os.Build;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 
 
 public class MyActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
+     * Managing the Google Map
+     */
+    private GoogleMap myMap;
+
+    /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -37,6 +47,43 @@ public class MyActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
 
+        //Setting up the map fragment
+        FragmentManager myFragmentManager = getFragmentManager();
+        MapFragment myMapFragment
+                = (MapFragment) myFragmentManager.findFragmentById(R.id.map);
+        myMap = myMapFragment.getMap();
+
+        myMap.setMyLocationEnabled(true);
+        if (myMap != null) {
+            myMap.setMyLocationEnabled(true);
+        }
+
+        //set up map type
+        myMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        //myMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        //myMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        //myMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+        //Getting current position and zooming to it
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+
+        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        if (location != null)
+        {
+            myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+                    .zoom(15)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            myMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        }
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -45,7 +92,9 @@ public class MyActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
     }
+
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {

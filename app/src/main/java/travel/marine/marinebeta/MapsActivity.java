@@ -1,23 +1,31 @@
 package travel.marine.marinebeta;
 
-import android.support.v4.app.FragmentActivity;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity {
 
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    public GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+
+
     }
+
 
     @Override
     protected void onResume() {
@@ -43,16 +51,34 @@ public class MapsActivity extends FragmentActivity {
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+            // Try to obtain the map from the MapFragment.
+            mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
+                mMap.setMyLocationEnabled(true);
+                LocationManager lm=(LocationManager)getSystemService(LOCATION_SERVICE);//use of location services by firstly defining location manager.
+                String provider=lm.getBestProvider(new Criteria(), true);
+
+                Location location =lm.getLastKnownLocation(provider);
+                if (location!=null){
+                    onLocationChanged(location);
+                }
+
+
                 setUpMap();
             }
         }
     }
 
+
+    public void onLocationChanged(Location location) {
+
+        LatLng latlng=new LatLng(location.getLatitude(),location.getLongitude());// This methods gets the users current longitude and latitude.
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));//Moves the camera to users current longitude and latitude
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng,(float) 14.6));//Animates camera and zooms to preferred state on the user's current location.
+    }
     /**
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we
      * just add a marker near Africa.
