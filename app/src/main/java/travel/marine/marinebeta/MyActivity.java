@@ -96,7 +96,9 @@ public class MyActivity extends Activity
 
     }
 
-
+    /*
+    Method for getting the item of drawer and displaying it
+    */
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
@@ -109,13 +111,14 @@ public class MyActivity extends Activity
                 //Map
                 break;
             case 1:
-                //Facebook
-
+                //Social Media Logins
+                Intent intentSocial = new Intent(this, LoginActivity.class);
+                startActivity(intentSocial);
                 break;
             case 2:
                 //Settings
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+                Intent intentSettings = new Intent(this, SettingsActivity.class);
+                startActivity(intentSettings);
 
                 break;
         }
