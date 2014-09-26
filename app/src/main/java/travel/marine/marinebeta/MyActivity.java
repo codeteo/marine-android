@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -103,6 +104,22 @@ public class MyActivity extends Activity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
+        switch (position) {
+            case 0:
+                //Map
+                break;
+            case 1:
+                //Facebook
+
+                break;
+            case 2:
+                //Settings
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+
+                break;
+        }
+
     }
 
     public void onSectionAttached(int number) {
@@ -133,7 +150,9 @@ public class MyActivity extends Activity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.my, menu);
+            //Comment out below line for settings menu left corner
+            //getMenuInflater().inflate(R.menu.my, menu);
+
             restoreActionBar();
             return true;
         }
