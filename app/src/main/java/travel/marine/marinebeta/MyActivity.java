@@ -4,9 +4,11 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -42,6 +44,14 @@ public class MyActivity extends Activity
         FragmentManager myFragmentManager = getFragmentManager();
         MapFragment myMapFragment
                 = (MapFragment) myFragmentManager.findFragmentById(R.id.map);
+
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.map, new MapsActivity(), (String) getTitle());
+        fragmentTransaction.commit();
+
+
+
 //        myMap = myMapFragment.getMap();
 //
 //        myMap.setMyLocationEnabled(true);
@@ -99,6 +109,7 @@ public class MyActivity extends Activity
         switch (position) {
             case 0:
                 //Map
+                Log.i("Fragment", "Call to fragment");
                 new MapsActivity();
                 break;
             case 1:
