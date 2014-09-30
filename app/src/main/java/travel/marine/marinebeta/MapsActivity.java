@@ -1,10 +1,10 @@
 package travel.marine.marinebeta;
 
+import android.app.Fragment;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,22 +13,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends Fragment {
 
     public GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
-
-
     }
 
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         setUpMapIfNeeded();
     }
@@ -57,7 +54,7 @@ public class MapsActivity extends FragmentActivity {
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 mMap.setMyLocationEnabled(true);
-                LocationManager lm=(LocationManager)getSystemService(LOCATION_SERVICE);//use of location services by firstly defining location manager.
+                LocationManager lm=(LocationManager)getActivity().getSystemService(getActivity().LOCATION_SERVICE);//use of location services by firstly defining loca
                 String provider=lm.getBestProvider(new Criteria(), true);
 
                 Location location =lm.getLastKnownLocation(provider);
